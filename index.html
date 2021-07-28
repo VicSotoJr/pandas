@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BBall Pandas</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<h1>B-BALL PANDAS 3PT CONTEST</h1>
+
+<body>
+
+    <div>
+        <input id="freeThrow" type="text" placeholder="Enter Free Throw Stat Here">
+        <input id="3PT" type="text" placeholder="Enter 3PT Stat Here">
+        <input id="shotIQ" type="text" placeholder="Enter Shot IQ Here">
+        <button id="statButton" onclick="statsInfo()">Enter</button>
+    </div>
+    <h2>Shot Average:</h2>
+    <h2 id="ftStat"></h2>
+
+    <!--Keeps track of Shots taken, made, and missed-->
+
+    <div >
+        <h2 id="shotsMade">0</h2>
+        <h2>&nbspfor&nbsp</h2>
+        <h2 id="shots">0</h2>
+    </div>
+
+    <div >
+        <button id=shotButton onclick="shootButton()">Shoot!</button>
+        <button  id="reset" onclick="reset()">Reset</button>
+    </div>
+
+    <div class="container">
+            <video id="makeVid" class="makeVid" src="MakeVideo.mp4"></video>
+        
+            <video id="missVid" class="missVid" src="MissVideo.mp4"></video>
+    </div>
+
+
+
+
+</body>
+
+<script>
+    var shotsTaken = 0;
+    var shotsMade = 0;
+    var shotsMissed = 0;
+    var shotChance = [];
+    var cacheDom ="";
+
+    function shootButton() {
+
+        var outcome = shotChance[Math.floor(Math.random() * shotChance.length)]
+
+        if (outcome == 'make') {
+            outcomeMake();
+        } else {
+            outcomeMiss();
+        }
+
+        shotsTaken = shotsTaken + 1;
+
+        document.getElementById('shots').innerHTML = shotsTaken;
+
+        if (shotsTaken == 10) {
+            document.getElementById('shotButton').style.visibility = "hidden";
+        }
+
+    }
+
+    function reset(){
+        shotsTaken = 0;
+        shotsMade = 0;
+        shotsMissed= 0;
+        document.getElementById('shots').innerHTML = 0;
+        document.getElementById('shotsMade').innerHTML = 0;
+
+        document.getElementById('shotButton').style.visibility = "visible";
+
+    }
+    function statsInfo() {
+
+        var freeThrow = document.getElementById('freeThrow').value;
+        var threePoint = document.getElementById('3PT').value;
+        var shotIQ = document.getElementById('shotIQ').value;
+        var stat = (parseInt(freeThrow) + parseInt(threePoint) + parseInt(shotIQ)) / 3;
+
+
+        if (stat > 100) {
+            document.getElementById('ftStat').innerHTML = "Bitch, stop playing enter real numbers";
+        } else {
+            document.getElementById('ftStat').innerHTML = stat
+        }
+
+        for (var i = 0; i < stat; i++) {
+            shotChance[i] = "make";
+        }
+
+        var missChance = 100 - shotChance.length;
+
+        for (var i = shotChance.length; i < 100; i++) {
+            shotChance[i] = "miss";
+        }
+
+    }
+
+
+
+    function outcomeMake() {
+        shotsMade = shotsMade + 1;
+
+        //new Audio('NiceShot.m4a').play()
+
+        makeVid = document.getElementById("makeVid");
+        makeVid.style.zIndex = "1"
+        makeVid.play();
+
+        makeVid.addEventListener('ended', (event) => {
+            makeVid.currentTime = 0;
+        });
+
+        document.getElementById('shotsMade').innerHTML = shotsMade;
+
+    }
+
+    function outcomeMiss() {
+        shotsMissed = shotsMissed + 1;
+
+        //new Audio('MissedShot.m4a').play()
+
+        missVid = document.getElementById("missVid");
+        missVid.style.zIndex = "1";
+        missVid.play();
+
+        missVid.addEventListener('ended', (event) => {
+            missVid.currentTime = 0;
+            missVid.style.zIndex = "-10";
+        });
+
+      
+    }
+</script>
+
+</html>
